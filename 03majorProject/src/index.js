@@ -1,7 +1,27 @@
 import "dotenv/config";
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
-connectDB();
+const port = process.env.PORT || 8000;
+
+connectDB()
+  .then(() => {
+    app.on("error", (error) => {
+      console.error(`Error starting the server: ${error.message}`);
+      throw error;
+    });
+
+    app.listen(port, () => {
+      console.log(`server is running at port ${port}`);
+    });
+
+    app.get("/", (req, res) => {
+      res.send("Hello, INDIA!");
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to the database", err);
+  });
 
 /*
 import mongoose from "mongoose";
