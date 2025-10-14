@@ -12,7 +12,7 @@ connectDB()
     });
 
     app.listen(port, () => {
-      console.log(`server is running at port ${port}`);
+      console.log(`index.js at line 15\nserver is running at port ${port}`);
     });
 
     app.get("/", (req, res) => {

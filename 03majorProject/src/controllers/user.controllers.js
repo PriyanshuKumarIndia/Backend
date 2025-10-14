@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-  console.log(req.body);
+  console.log("userColtroller.js at line 8", req.body);
   const { email, fullName, username, password } = req.body;
 
   if (
@@ -53,7 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  console.log("createdUser: ", createdUser);
+  console.log("userController.js at line 56\ncreatedUser: ", createdUser);
 
   if (!createdUser) throw new ApiError(500, "Failed to create user");
 
