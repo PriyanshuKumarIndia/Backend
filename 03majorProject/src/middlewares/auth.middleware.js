@@ -1,5 +1,6 @@
 import { User } from "../models/user.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import jwt from "jsonwebtoken";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   const token =
@@ -10,11 +11,10 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized access" });
   }
 
+  console.log("authMiddleware.js at line 13\ntoken: ", token);
+
   try {
-    const decoded = JsonWebTokenError.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET
-    );
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     console.log("authMiddleware.js at line14\ndecoded value: ", decoded);
     const user = await User.findById(decoded._id).select(
       "-password -refreshToken"
@@ -25,6 +25,8 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    console.log("error at authmiddleWare at line 31: ", error);
+
     return res
       .status(401)
       .json({ message: "Error occured while verifying user" });
