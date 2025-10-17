@@ -11,11 +11,11 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized access" });
   }
 
-  console.log("authMiddleware.js at line 13\ntoken: ", token);
+  console.log("authMiddleware.js\ntoken: ", token);
 
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    console.log("authMiddleware.js at line14\ndecoded value: ", decoded);
+    console.log("authMiddleware.js\ndecoded value: ", decoded);
     const user = await User.findById(decoded._id).select(
       "-password -refreshToken"
     );
@@ -25,7 +25,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.log("error at authmiddleWare at line 31: ", error);
+    console.log("error at authmiddleWare: ", error);
 
     return res
       .status(401)
