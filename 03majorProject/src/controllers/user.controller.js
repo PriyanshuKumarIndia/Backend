@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
 const generateAccessTokenAndRefreshToken = async (user) => {
@@ -345,9 +346,11 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         subscribersCount: { $size: "$subscribers" },
         subscribedChannelsCount: { $size: "$subscribedChannels" },
         isSubscribed: {
-          if: { $in: [req.user?._id, "$subscribers.subscriber"] },
-          then: true,
-          else: false,
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+            then: true,
+            else: false,
+          },
         },
       },
     },
