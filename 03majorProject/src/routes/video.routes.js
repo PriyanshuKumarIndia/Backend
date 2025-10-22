@@ -28,7 +28,7 @@ router
       },
     ]),
     publishAVideo
-  );
+  ); // Testing done
 
 router
   .route("/:videoId")
