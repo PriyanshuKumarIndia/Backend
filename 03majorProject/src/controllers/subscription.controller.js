@@ -15,9 +15,30 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
   const { channelId } = req.params;
 });
 
-// controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
-  const { subscriberId } = req.params;
+  const { channelId } = req.params;
+
+  if (!channelId || !isValidObjectId(channelId)) {
+    throw new ApiError(400, "Invalid User Id");
+  }
+
+  const subscribedChannels = Subscription.aggregate([
+    {
+      $match: { subscriber: new mongoose.Types.ObjectId(channelId) },
+    },
+  ]).catch((err) => {
+    throw new ApiError(500, "Error fetching subscribers");
+  });
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        subscribedChannels,
+        "Subscribers fetched successfully"
+      )
+    );
 });
 
 export { toggleSubscription, getUserChannelSubscribers, getSubscribedChannels };
